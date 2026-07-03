@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -8,7 +8,7 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
-export class Home {
+export class Home implements OnInit, OnDestroy {
 
   // Interpolation
   portalName = 'Student Course Portal';
@@ -22,8 +22,22 @@ export class Home {
   // Two-Way Binding
   searchTerm = '';
 
-  onEnrollClick() {
+  // Lifecycle Hook Example
+  availableCourses = 12;
+
+  // Event Binding Method
+  onEnrollClick(): void {
     this.message = 'Enrollment opened!';
+  }
+
+  // Lifecycle Hook - Called when the component is initialized
+  ngOnInit(): void {
+    console.log('HomeComponent initialised — courses loaded');
+  }
+
+  // Lifecycle Hook - Called when the component is destroyed
+  ngOnDestroy(): void {
+    console.log('HomeComponent destroyed');
   }
 
   /*
