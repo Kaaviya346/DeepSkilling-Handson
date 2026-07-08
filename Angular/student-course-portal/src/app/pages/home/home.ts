@@ -6,7 +6,7 @@ import { FormsModule } from '@angular/forms';
   standalone: true,
   imports: [FormsModule],
   templateUrl: './home.html',
-  styleUrl: './home.css',
+  styleUrl: './home.css'
 })
 export class Home implements OnInit, OnDestroy {
 
@@ -23,26 +23,32 @@ export class Home implements OnInit, OnDestroy {
   searchTerm = '';
 
   // Lifecycle Hook Example
-  availableCourses = 12;
+  courseCount = 0;
 
-  // Event Binding Method
-  onEnrollClick(): void {
-    this.message = 'Enrollment opened!';
-  }
-
-  // Lifecycle Hook - Called when the component is initialized
   ngOnInit(): void {
-    console.log('HomeComponent initialised — courses loaded');
+
+    this.courseCount = 12;
+
+    console.log('HomeComponent initialized — courses loaded');
+
   }
 
-  // Lifecycle Hook - Called when the component is destroyed
   ngOnDestroy(): void {
+
     console.log('HomeComponent destroyed');
+
+  }
+
+  onEnrollClick() {
+
+    this.message = 'Enrollment opened!';
+
   }
 
   /*
-   Difference:
-   [property] is one-way binding (Component → DOM).
-   [(ngModel)] is two-way binding (Component ↔ DOM).
+   [property] = One-way binding (Component → DOM)
+
+   [(ngModel)] = Two-way binding (DOM ↔ Component)
   */
+
 }
