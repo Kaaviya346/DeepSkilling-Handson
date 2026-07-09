@@ -1,6 +1,5 @@
 <div
   appHighlight
-  [appHighlight]="'lightblue'"
   [ngClass]="cardClasses"
   [ngStyle]="{'border-left': '8px solid ' + borderColor}">
 
@@ -13,17 +12,22 @@
   <p><strong>Credits:</strong> {{ course.credits | creditLabel }}</p>
 
   <div [ngSwitch]="course.gradeStatus">
-
     <p *ngSwitchCase="'passed'">✅ Passed</p>
-
     <p *ngSwitchCase="'failed'">❌ Failed</p>
-
     <p *ngSwitchCase="'pending'">⏳ Pending</p>
-
   </div>
+
+  <button (click)="toggleEnrollment()">
+    {{ enrollmentService.isEnrolled(course.id) ? 'Unenroll' : 'Enroll' }}
+  </button>
 
   <button (click)="toggleDetails()">
     {{ isExpanded ? 'Hide Details' : 'Show Details' }}
+  </button>
+
+  <!-- NEW BUTTON -->
+  <button (click)="viewCourse()">
+    View Details
   </button>
 
   <div *ngIf="isExpanded">

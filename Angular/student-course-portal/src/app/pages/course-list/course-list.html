@@ -1,5 +1,16 @@
 <h2>Course List</h2>
 
+<input
+  type="text"
+  placeholder="Search course"
+  [(ngModel)]="searchTerm">
+
+<button (click)="searchCourse()">
+  Search
+</button>
+
+<br><br>
+
 <p *ngIf="isLoading">
   Loading courses...
 </p>

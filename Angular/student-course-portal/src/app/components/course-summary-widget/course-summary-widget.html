@@ -1,0 +1,9 @@
+<h3>Course Summary</h3>
+
+<p><strong>Total Courses:</strong> {{ courses.length }}</p>
+
+<ul>
+  <li *ngFor="let course of courses">
+    {{ course.name }}
+  </li>
+</ul>

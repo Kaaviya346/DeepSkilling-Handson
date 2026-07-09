@@ -1,54 +1,43 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+
+import { CourseService } from '../../services/course';
+import { CourseSummaryWidget } from '../../components/course-summary-widget/course-summary-widget';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [FormsModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    CourseSummaryWidget
+  ],
   templateUrl: './home.html',
   styleUrl: './home.css'
 })
-export class Home implements OnInit, OnDestroy {
+export class Home implements OnInit {
 
-  // Interpolation
-  portalName = 'Student Course Portal';
+  totalCourses = 0;
 
-  // Property Binding
-  isPortalActive = true;
+  enrolledCourses = 3;
 
-  // Event Binding
-  message = '';
+  gpa = 3.8;
 
-  // Two-Way Binding
   searchTerm = '';
 
-  // Lifecycle Hook Example
-  courseCount = 0;
+  constructor(private courseService: CourseService) {}
 
   ngOnInit(): void {
 
-    this.courseCount = 12;
-
-    console.log('HomeComponent initialized — courses loaded');
+    this.totalCourses = this.courseService.getCourses().length;
 
   }
 
-  ngOnDestroy(): void {
+  enrollNow(): void {
 
-    console.log('HomeComponent destroyed');
-
-  }
-
-  onEnrollClick() {
-
-    this.message = 'Enrollment opened!';
+    alert('Enrollment opened!');
 
   }
-
-  /*
-   [property] = One-way binding (Component → DOM)
-
-   [(ngModel)] = Two-way binding (DOM ↔ Component)
-  */
 
 }

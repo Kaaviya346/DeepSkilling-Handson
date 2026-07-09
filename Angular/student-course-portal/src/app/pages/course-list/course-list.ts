@@ -1,13 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+
 import { CourseCard } from '../../components/course-card/course-card';
 import { Highlight } from '../../directives/highlight';
+
+import { CourseService } from '../../services/course';
+import { Course } from '../../models/course.model';
 
 @Component({
   selector: 'app-course-list',
   standalone: true,
   imports: [
     CommonModule,
+    FormsModule,
     CourseCard,
     Highlight
   ],
@@ -18,39 +25,47 @@ export class CourseList implements OnInit {
 
   isLoading = true;
 
-  courses = [
-    {
-      id: 1,
-      name: 'Angular Basics',
-      code: 'ANG101',
-      credits: 4,
-      gradeStatus: 'passed'
-    },
-    {
-      id: 2,
-      name: 'Java Programming',
-      code: 'JAVA201',
-      credits: 3,
-      gradeStatus: 'failed'
-    },
-    {
-      id: 3,
-      name: 'Database Systems',
-      code: 'DB301',
-      credits: 4,
-      gradeStatus: 'pending'
-    }
-  ];
+  courses: Course[] = [];
+
+  searchTerm = '';
+
+  constructor(
+    private courseService: CourseService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {
+
+    this.searchTerm = this.route.snapshot.queryParamMap.get('search') || '';
+
     setTimeout(() => {
+
+      this.courses = this.courseService.getCourses();
+
       this.isLoading = false;
+
     }, 1500);
+
   }
 
-  // trackBy improves performance by reusing existing DOM elements.
-  trackByCourseId(index: number, course: any) {
+  searchCourse(): void {
+
+    this.router.navigate(
+      ['courses'],
+      {
+        queryParams: {
+          search: this.searchTerm
+        }
+      }
+    );
+
+  }
+
+  trackByCourseId(index: number, course: Course): number {
+
     return course.id;
+
   }
 
 }
