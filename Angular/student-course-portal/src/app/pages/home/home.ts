@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { CourseService } from '../../services/course';
+import { LoadingService } from '../../services/loading';
 import { CourseSummaryWidget } from '../../components/course-summary-widget/course-summary-widget';
 
 @Component({
@@ -26,11 +27,28 @@ export class Home implements OnInit {
 
   searchTerm = '';
 
-  constructor(private courseService: CourseService) {}
+  constructor(
+    private courseService: CourseService,
+    public loadingService: LoadingService
+  ) {}
 
   ngOnInit(): void {
 
-    this.totalCourses = this.courseService.getCourses().length;
+    this.courseService.getCourses().subscribe({
+
+      next: (courses) => {
+
+        this.totalCourses = courses.length;
+
+      },
+
+      error: (err) => {
+
+        console.error(err);
+
+      }
+
+    });
 
   }
 

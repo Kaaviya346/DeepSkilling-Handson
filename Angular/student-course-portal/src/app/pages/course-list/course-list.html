@@ -15,20 +15,31 @@
   Loading courses...
 </p>
 
-<div *ngIf="!isLoading">
+<p *ngIf="errorMessage" style="color:red">
+  {{ errorMessage }}
+</p>
 
-  <div *ngIf="courses.length > 0; else noCourses">
+<div *ngIf="!isLoading && courses.length > 0">
+
+  <div *ngFor="let c of courses; trackBy: trackByCourseId">
 
     <app-course-card
-      *ngFor="let c of courses; trackBy: trackByCourseId"
       [course]="c"
       appHighlight>
     </app-course-card>
+
+    <button (click)="loadStudents(c.id)">
+      Load Students
+    </button>
+
+    <br><br>
 
   </div>
 
 </div>
 
-<ng-template #noCourses>
+<div *ngIf="!isLoading && courses.length === 0">
+
   <p>No courses available.</p>
-</ng-template>
+
+</div>
