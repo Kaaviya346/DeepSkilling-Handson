@@ -11,35 +11,24 @@
 
 <br><br>
 
-<p *ngIf="isLoading">
+<p *ngIf="loading$ | async">
   Loading courses...
 </p>
 
-<p *ngIf="errorMessage" style="color:red">
-  {{ errorMessage }}
+<p *ngIf="error$ | async as error" style="color:red">
+  {{ error }}
 </p>
 
-<div *ngIf="!isLoading && courses.length > 0">
+<div *ngIf="courses$ | async as courses">
 
-  <div *ngFor="let c of courses; trackBy: trackByCourseId">
+  <app-course-card
+    *ngFor="let c of courses; trackBy: trackByCourseId"
+    [course]="c"
+    appHighlight>
+  </app-course-card>
 
-    <app-course-card
-      [course]="c"
-      appHighlight>
-    </app-course-card>
-
-    <button (click)="loadStudents(c.id)">
-      Load Students
-    </button>
-
-    <br><br>
-
-  </div>
-
-</div>
-
-<div *ngIf="!isLoading && courses.length === 0">
-
-  <p>No courses available.</p>
+  <p *ngIf="courses.length === 0">
+    No courses available.
+  </p>
 
 </div>

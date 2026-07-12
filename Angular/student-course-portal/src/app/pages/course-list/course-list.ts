@@ -3,16 +3,20 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { Subject } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { Store } from '@ngrx/store';
 
 import { CourseCard } from '../../components/course-card/course-card';
 import { Highlight } from '../../directives/highlight';
 
-import { CourseService } from '../../services/course';
-import { EnrollmentService } from '../../services/enrollment';
-
 import { Course } from '../../models/course.model';
+
+import * as CourseActions from '../../store/course/course.actions';
+import {
+  selectAllCourses,
+  selectCoursesLoading,
+  selectCoursesError
+} from '../../store/course/course.selectors';
 
 @Component({
   selector: 'app-course-list',
@@ -28,20 +32,14 @@ import { Course } from '../../models/course.model';
 })
 export class CourseList implements OnInit {
 
-  isLoading = true;
-
-  courses: Course[] = [];
+  courses$!: Observable<Course[]>;
+  loading$!: Observable<boolean>;
+  error$!: Observable<string | null>;
 
   searchTerm = '';
 
-  errorMessage = '';
-
-  // Subject used for switchMap
-  selectedCourse = new Subject<number>();
-
   constructor(
-    private courseService: CourseService,
-    private enrollmentService: EnrollmentService,
+    private store: Store,
     private router: Router,
     private route: ActivatedRoute
   ) {}
@@ -51,65 +49,18 @@ export class CourseList implements OnInit {
     this.searchTerm =
       this.route.snapshot.queryParamMap.get('search') || '';
 
-    // Load courses
-    this.courseService.getCourses().subscribe({
+    this.store.dispatch(
+      CourseActions.loadCourses()
+    );
 
-      next: (courses) => {
+    this.courses$ =
+      this.store.select(selectAllCourses);
 
-        console.log('Courses received:', courses);
+    this.loading$ =
+      this.store.select(selectCoursesLoading);
 
-        this.courses = courses;
-
-        this.isLoading = false;
-
-      },
-
-      error: (err) => {
-
-        console.error('HTTP Error:', err);
-
-        this.errorMessage = err.message;
-
-        this.isLoading = false;
-
-      },
-
-      complete: () => {
-
-        console.log('Courses loaded successfully.');
-
-      }
-
-    });
-
-    // switchMap example
-    this.selectedCourse.pipe(
-
-      switchMap(courseId =>
-        this.enrollmentService.getStudentsByCourse(courseId)
-      )
-
-    ).subscribe({
-
-      next: (students) => {
-
-        console.log('Enrollments:', students);
-
-      },
-
-      error: (err) => {
-
-        console.error(err);
-
-      }
-
-    });
-
-  }
-
-  loadStudents(courseId: number): void {
-
-    this.selectedCourse.next(courseId);
+    this.error$ =
+      this.store.select(selectCoursesError);
 
   }
 

@@ -1,47 +1,27 @@
-<div
-  appHighlight
-  [ngClass]="cardClasses"
-  [ngStyle]="{'border-left': '8px solid ' + borderColor}">
+<button
+  *ngIf="!(enrolledIds$ | async)?.includes(course.id)"
+  (click)="enroll()">
 
-  <h3>{{ course.name }}</h3>
+  Enroll
 
-  <p><strong>Course ID:</strong> {{ course.id }}</p>
+</button>
 
-  <p><strong>Course Code:</strong> {{ course.code }}</p>
+<button
+  *ngIf="(enrolledIds$ | async)?.includes(course.id)"
+  (click)="unenroll()">
 
-  <p><strong>Credits:</strong> {{ course.credits | creditLabel }}</p>
+  Unenroll
 
-  <div [ngSwitch]="course.gradeStatus">
-    <p *ngSwitchCase="'passed'">✅ Passed</p>
-    <p *ngSwitchCase="'failed'">❌ Failed</p>
-    <p *ngSwitchCase="'pending'">⏳ Pending</p>
-  </div>
+</button>
 
-  <button (click)="toggleEnrollment()">
-    {{ enrollmentService.isEnrolled(course.id) ? 'Unenroll' : 'Enroll' }}
-  </button>
+<button (click)="toggleDetails()">
 
-  <button (click)="toggleDetails()">
-    {{ isExpanded ? 'Hide Details' : 'Show Details' }}
-  </button>
+  {{ isExpanded ? 'Hide Details' : 'Show Details' }}
 
-  <!-- NEW BUTTON -->
-  <button (click)="viewCourse()">
-    View Details
-  </button>
+</button>
 
-  <div *ngIf="isExpanded">
+<button (click)="viewCourse()">
 
-    <hr>
+  View Details
 
-    <p><strong>Description:</strong> This is a beginner-friendly course.</p>
-
-    <p><strong>Duration:</strong> 8 Weeks</p>
-
-    <p><strong>Instructor:</strong> Angular Team</p>
-
-  </div>
-
-</div>
-
-<hr>
+</button>
